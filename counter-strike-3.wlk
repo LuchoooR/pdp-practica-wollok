@@ -12,7 +12,7 @@ object equipoCounterTerrorist {
     method agregarJugador(jugador) {
         jugadores.add(jugador)
     }
-    
+
     method dineroEquipo() = dineroEquipo
     method sumarDinero(cantidad) {
         dineroEquipo = dineroEquipo + cantidad
