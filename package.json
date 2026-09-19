@@ -1,7 +1,8 @@
 {
-    "name": "prueba",
-    "version": "1.0.0",
+    "name": "pdp-practica-wollok",
+    "version": "1.0.0", 
     "wollokVersion": "4.2.3",
-    "author": "luchooor",
+    "author": "lucia_afpf736",
     "license": "ISC"
   }
+  

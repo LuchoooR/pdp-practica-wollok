@@ -388,7 +388,7 @@ object mecanico2 {
 }
 
 object mecanico3 {
-    var nombre = "Juan 'El Electricista'"
+    var nombre = "Juan El Electricista"
     var especialidad = "Sistemas Eléctricos e Iluminación"
     var disponible = true
     var clienteActual = null
