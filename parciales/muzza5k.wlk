@@ -104,19 +104,19 @@ object resumen {
 }
 
 object laPreferida{
-    const pizzaPredilecta
+    const pizzaPredilecta = 1
 
     method ejecutar(pedido) = pedido.map({ pizza => new PizzaCompuesta(subPizzas = [pizza, pizzaPredilecta]) })
 
 }
 
-object laCombineta{
-    method ejecutar(pedido){
-        return utils.combinarConSiguiente(pedido).map({ par => 
-            new PizzaCompuesta(subPizzas = par) 
-        })
-    }
-}
+// object laCombineta{
+//     method ejecutar(pedido){
+//         return utils.combinarConSiguiente(pedido).map({ par => 
+//             new PizzaCompuesta(subPizzas = par) 
+//         })
+//     }
+// }
 
 
 
@@ -157,3 +157,4 @@ class Manioso inherits Cliente {
     override method estaConforme(entrega) = entrega.loEntregado().all({p=> p.noTiene(ingredienteFeo)})
 
 }
+
