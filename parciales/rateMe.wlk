@@ -1,29 +1,34 @@
 class Usuario {
-    var property calificacion = 5
-    var acciones = [] //eventos o actividades
+    var property calificacion
+    var property acciones = [] //eventos o actividades
 
 
     method subirCalificacion(usuario){
-        calificacion += (usuario.calificacion()*0.10).min(5)
+        return (usuario.calificacion() + (self.calificacion() * 0.10)).min(5)
     }
 
-    method bajarCalificaicon(usuario){
-        calificacion -= (usuario.calificacion()*0.12).max(1)
+    method bajarCalificacion(usuario){
+        return (usuario.calificacion() - (self.calificacion() * 0.12)).max(1)
     }
 
     //1.a)
     method puedeRealizar(accion) = accion.puedeRealizar(self)
 
     //1.b)
-    method notaHipotetica(accion, usuario) {
+    method notaHipotetica(accion, calificado) {
+        return self.notaHipoteticaSinLimites(accion, calificado).max(1).min(5)
+    }
 
-        if (Evaluador.comparar(self, accion)){
-            return (usuario.calificacion() + (self.calificacion() * 0.10)).min(5)
+    method notaHipoteticaSinLimites(accion, usuario) {
+        if (self.aprueba(accion, self)){
+            return (usuario.calificacion() + (self.calificacion() * 0.10))
         } else{
-            return (usuario.calificacion() - (self.calificacion() * 0.12)).max(1)
+            return (usuario.calificacion() - (self.calificacion() * 0.12))
         }
 
     }
+
+    method aprueba(accion, usuario) = Evaluador.comparar(self, accion)
 
     method calificar(accion, calificado){
         calificado.calificacion(self.notaHipotetica(accion, calificado))
@@ -32,15 +37,46 @@ class Usuario {
 
     method realizar(accion) {
       if(self.puedeRealizar(accion)){
-        acciones.add(accion)
         accion.aplicarConsecuencias(self)
+        acciones.add(accion)
+        
       } else {
         throw new Exception(message="no puede realizar la acción")
       }
     }
 
-    method cualEsLaMasPopular() = acciones.max({a => a.popular()})
+    method cualEsLaMasPopular(usuario) = acciones.max({a => a.popular(self)})
 
+}
+
+
+
+class Famosito inherits Usuario{
+    var criterio
+
+    method cambiar(criterioNew){
+        criterio = criterioNew
+    }
+
+
+    override method notaHipotetica(accion, usuario) {
+        if(criterio.comparar(self, accion, usuario)){
+            return (usuario.calificacion() + (self.calificacion() * 0.10)).min(5)
+        } else{
+            return (usuario.calificacion() - (self.calificacion() * 0.12)).max(1)
+        }
+      
+    }
+
+    override method aprueba(accion, usuario) = criterio.comparar(self, accion, usuario)
+}
+
+object admiracion{
+    method comparar(famosito, accion, usuario) = famosito.calificacion() < usuario.cualEsLaMasPopular(usuario).popular(usuario)
+}
+
+object envidia {
+    method comparar(famosito, accion, usuario) = usuario.acciones().size() <= famosito.acciones().size()
 }
 
 class Evento{
@@ -50,7 +86,7 @@ class Evento{
 
     method puedeRealizar(usuario) = usuario.calificacion() >= self.calificacionMinima()
 
-    method popular() = self.calificacionMinima()
+    method popular(usuario) = self.calificacionMinima()
 
     method aplicarConsecuencias(usuario){}
 }
@@ -64,7 +100,9 @@ class Actividad{
       interesados.forEach({i => i.calificar(self, usuario)})
     }
 
-    method popular() = 
+    method popular(usuario) = interesados.sum({i => i.notaHipoteticaSinLimites(self, usuario)})
+
+
 }
 class Evaluador{
     method comparar(usuario, accion)
@@ -73,5 +111,13 @@ class Evaluador{
 object rateMe {
     method quienesPuedeRealizar(accion, usuarios){
         return usuarios.filter({u => accion.puedeRealizar(u)})
+    }
+
+    method simularItinerario(usuario, acciones){
+        const simulado = usuario.copy()
+
+        acciones.filter({a => simulado.puedeRealizar(a)}).forEach({a => simulado.realizar(a)})
+    
+        return simulado
     }
 }
