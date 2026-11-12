@@ -109,6 +109,8 @@ class Ciudad{
     }
 }
 
+
+
 class Trimestre{
     const property pbiPerCapita
 }
