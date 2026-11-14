@@ -1,4 +1,3 @@
-
 class Contenido{
     const property genero
     const property actoresProtagonistas = #{}
@@ -129,7 +128,6 @@ class Usuario{
     method vio(unContenido) = contenidosVistos.contains(unContenido)
 
     method generosVistos() = contenidosVistos.map({c => c.genero()}).asSet()
-
 
     method minutosDe(genero) = contenidosVistos.filter({ c => c.genero() == genero}).sum({c => c.duracion()})  
 
